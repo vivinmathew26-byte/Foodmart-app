@@ -6,7 +6,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/vivinmathew26-byte/CI-CD-.git'
+                    url: 'https://github.com/vivinmathew26-byte/Foodmart-app.git'
             }
         }
 
