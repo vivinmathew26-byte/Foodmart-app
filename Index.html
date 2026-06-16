@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Order Website</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>My Delicious Bites</h1>
+        <nav>
+            <ul>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#cart">Cart</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="menu">
+            <h2>Our Menu</h2>
+            <div class="menu-items">
+                </div>
+        </section>
+
+        <section id="cart">
+    <h2>Your Cart</h2>
+    <form id="order-form" action="https://formspree.io/f/your-formspree-id" method="POST">
+        <div class="cart-items" id="cart-items-display">
+            <p>Your cart is empty.</p>
+        </div>
+
+        <div class="customer-details">
+            <label for="customer-name">Your Name:</label>
+            <input type="text" id="customer-name" name="name" required>
+            <label for="tnum">Table Num:</label>
+            <input type="number" id="tnum" name="tabel number" required>
+        </div>
+
+        <input type="hidden" name="order-details" id="order-details-input">
+
+        <div class="cart-summary">
+            <p>Subtotal: ₹<span id="cart-subtotal">0.00</span></p>
+            <p>SGST (5%): ₹<span id="cart-SGST">0.00</span></p>
+            <p>CGST (6%): ₹<span id="cart-CGST">0.00</span></p>
+            <p>Total: ₹<span id="cart-total">0.00</span></p>
+            <button id="checkout-btn" type="submit">Order Food</button>
+        </div>
+    </form>
+</section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Have questions? Reach out to us!</p>
+            <address>
+                123 Food Street, Pollachi, Coimbatore, India<br>
+                Email: food@gamil.com<br>
+                Phone: +91 98765 43210
+            </address>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 My Delicious Bites. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js">
+     
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" href="style.css"> <style>
+        /* Optional: Add specific styles for the order confirmation page */
+        .confirmation-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .confirmation-container h1 {
+            color: #ff6347;
+            text-align: center;
+        }
+        .confirmation-details p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Delicious Bites</h1>
+        <nav>
+            <ul>
+                <li><a href="Index.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="confirmation-container">
+           
+     <div id="order-summary-display">
+                </div>
+            <p>We'll notify you once your order is on its way. Enjoy your meal! 😋</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 My Delicious Bites. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const orderSummaryDisplay = document.getElementById('order-summary-display');
+            const storedOrderDetails = localStorage.getItem('orderDetails');
+            
+            if (storedOrderDetails) {
+                // Display the stored order details
+                orderSummaryDisplay.innerHTML = storedOrderDetails.replace(/\n/g, '<br>');
+                
+                // Clear the data from localStorage after displaying it
+                // localStorage.removeItem('orderDetails');
+            } else {
+                orderSummaryDisplay.innerHTML = '<p>No order details found.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
