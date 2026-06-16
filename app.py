@@ -1,6 +1,26 @@
-from flask import Flask, request, jsonify, send_file, session, redirect
+from flask import Flask, request, jsonify, send_file, send_from_directory, session, redirect
 import sqlite3, json, os
 from datetime import datetime
+
+app = Flask(__name__, static_folder='.', static_url_path='')
+
+# Serve static files (css, js)
+@app.route('/style.css')
+def serve_css():
+    return send_from_directory('.', 'style.css')
+
+@app.route('/script.js')
+def serve_js():
+    return send_from_directory('.', 'script.js')
+
+# Serve main page
+@app.route('/')
+def index():
+    return send_file('Index.html')
+
+@app.route('/order')
+def order_page():
+    return send_file('order.html')
 
 app = Flask(__name__)
 app.secret_key = "food_secret_key"
