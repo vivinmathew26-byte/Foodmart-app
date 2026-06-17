@@ -42,6 +42,5 @@ pipeline {
                 sh 'nohup /usr/local/bin/kubectl port-forward svc/food-website-service 8081:80 --address=0.0.0.0 &'
             }
         }
-
     }
 }

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: food-website-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: food-website
@@ -17,10 +17,8 @@ spec:
         image: food-website:latest
         imagePullPolicy: Never
         ports:
-        - containerPort: 5000
-
+        - containerPort: 80
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -31,5 +29,5 @@ spec:
     app: food-website
   ports:
   - port: 80
-    targetPort: 5000
+    targetPort: 80
     nodePort: 30081
