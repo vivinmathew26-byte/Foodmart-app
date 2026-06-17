@@ -3,12 +3,12 @@ import sqlite3, json, os
 from datetime import datetime
 
 # ─────────────────────────────────────
-#  App setup
+#  App setup - static_folder points to /app
 # ─────────────────────────────────────
-app = Flask(__name__, static_folder='.', static_url_path='')
+app = Flask(__name__, static_folder='/app', static_url_path='')
 app.secret_key = "food_secret_key"
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
-DB = "orders.db"
+DB = "/app/orders.db"
 
 # ─────────────────────────────────────
 #  Database setup
@@ -35,22 +35,22 @@ def init_db():
 # ─────────────────────────────────────
 @app.route('/style.css')
 def serve_css():
-    return send_from_directory('.', 'style.css')
+    return send_from_directory('/app', 'style.css')
 
 @app.route('/script.js')
 def serve_js():
-    return send_from_directory('.', 'script.js')
+    return send_from_directory('/app', 'script.js')
 
 # ─────────────────────────────────────
 #  Serve HTML pages
 # ─────────────────────────────────────
 @app.route('/')
 def index():
-    return send_file('Index.html')
+    return send_file('/app/Index.html')
 
 @app.route('/order')
 def order_page():
-    return send_file('order.html')
+    return send_file('/app/order.html')
 
 # ─────────────────────────────────────
 #  API - Place order
@@ -59,7 +59,7 @@ def order_page():
 def place_order():
     data = request.get_json()
     conn = sqlite3.connect(DB)
-    conn.execute('''INSERT INTO orders
+    cursor = conn.execute('''INSERT INTO orders
         (name, table_num, items, subtotal, sgst, cgst, total, created)
         VALUES (?,?,?,?,?,?,?,?)''', (
         data['customer_name'],
@@ -71,12 +71,13 @@ def place_order():
         data['total'],
         datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     ))
+    order_id = cursor.lastrowid
     conn.commit()
     conn.close()
     return jsonify({
         "success": True,
         "message": "Order placed!",
-        "order_id": conn.lastrowid,
+        "order_id": order_id,
         "items": data['items']
     })
 
@@ -95,7 +96,7 @@ def admin_login():
         <h2>🍔 Admin Login</h2>
         <form method="POST">
             <input type="password" name="password" placeholder="Enter password"
-                style="padding:8px;margin:10px 0;width:200px;display:block">
+                style="padding:8px;margin:10px 0;width:200px;display:block;margin:10px auto">
             <button type="submit"
                 style="background:#ff6347;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer">
                 Login
@@ -130,21 +131,33 @@ def admin():
     <style>
         body {{ font-family: Arial; padding: 20px; background: #f4f4f4; }}
         h1 {{ color: #ff6347; }}
-        table {{ width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }}
+        table {{ width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }}
         th {{ background: #ff6347; color: white; padding: 12px; text-align: left; }}
         td {{ padding: 10px 12px; border-bottom: 1px solid #eee; }}
         tr:hover td {{ background: #fff5f3; }}
+        .stats {{ display:flex; gap:20px; margin-bottom:20px; }}
+        .stat-card {{ background:white; padding:15px 20px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }}
+        .stat-num {{ font-size:24px; font-weight:bold; color:#ff6347; }}
     </style>
     </head><body>
     <h1>🍔 My Delicious Bites — Admin Panel</h1>
-    <p>Total Orders: <strong>{len(orders)}</strong></p>
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-num">{len(orders)}</div>
+            <div>Total Orders</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">₹{sum(o[7] for o in orders):.0f}</div>
+            <div>Total Revenue</div>
+        </div>
+    </div>
     <table>
         <tr>
             <th>ID</th><th>Name</th><th>Table</th>
             <th>Items</th><th>Total</th><th>Status</th>
             <th>Time</th><th>Action</th>
         </tr>
-        {rows if rows else "<tr><td colspan='8' style='text-align:center;padding:20px'>No orders yet</td></tr>"}
+        {rows if rows else "<tr><td colspan='8' style='text-align:center;padding:20px;color:#999'>No orders yet</td></tr>"}
     </table>
     <script>
     function del(id) {{
